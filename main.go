@@ -45,7 +45,7 @@ func initialModel() model {
 
 func (m model) Init() tea.Cmd {
 	// Immediately use window size for content padding
-	return tea.WindowSize()
+	return tea.Batch(tea.WindowSize(), tickCmd())
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -95,8 +95,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		xpadding = (msg.Width - width) / 2
 		ypadding = (msg.Height - 3) / 2
 		m.progress.Width = width
-		// after setting padding, start the clock
-		return m, tickCmd()
+		return m, nil
 	default:
 		return m, nil
 	}
