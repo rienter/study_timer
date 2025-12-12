@@ -32,7 +32,11 @@ const width = 80
 
 func initialModel() model {
 	var starting int
-	fmt.Sscanf(os.Args[1], "%d", &starting)
+	if len(os.Args) > 1 {
+		fmt.Sscanf(os.Args[1], "%d", &starting)
+	} else {
+		starting = 60
+	}
 	return model{
 		timer:    timer.InitTimer(starting),
 		progress: progress.New(progress.WithDefaultGradient()),
