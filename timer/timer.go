@@ -1,5 +1,7 @@
 package timer
 
+import "errors"
+
 type Timer struct {
 	current  int
 	starting int
@@ -26,10 +28,6 @@ func (t Timer) Starting() int {
 	return t.starting
 }
 
-func clockHands(seconds int) (int, int) {
-	return seconds / 60, seconds % 60
-}
-
 func (t Timer) Running() bool {
 	return t.running && (t.current > 0)
 }
@@ -42,6 +40,10 @@ func (t Timer) Finished() bool {
 	return !(t.current > 0)
 }
 
-func (t *Timer) Decrease() {
+func (t *Timer) Decrease() error {
+	if t.Finished() {
+		return errors.New("The timer has already finished")
+	}
 	t.current = t.current - 1
+	return nil
 }

@@ -29,7 +29,7 @@ func TestInitTimer(t *testing.T) {
 	expected := Timer{
 		starting: 60 * 60,
 		current:  60 * 60,
-		running:  false,
+		running:  true,
 	}
 
 	assertEqAny(t, expected, timer)
@@ -43,6 +43,15 @@ func TestTimePassing(t *testing.T) {
 	expected := 3599
 
 	assertEqInt(t, expected, got)
+}
+
+func TestTimePassingFail(t *testing.T) {
+	timer := InitTimer(0)
+
+	err := timer.Decrease()
+	assertFail(t, err)
+
+	assertEqInt(t, 0, timer.current)
 }
 
 func TestTogglePause(t *testing.T) {
@@ -67,14 +76,6 @@ func assertEqInt(t testing.TB, expected, got int) {
 	}
 }
 
-func assertEqString(t testing.TB, expected, got string) {
-	t.Helper()
-
-	if expected != got {
-		t.Errorf("\nGot: %s\nExpected: %s", got, expected)
-	}
-}
-
 func assertEqBool(t testing.TB, expected, got bool) {
 	t.Helper()
 
@@ -88,5 +89,11 @@ func assertEqAny(t testing.TB, expected, got any) {
 
 	if !reflect.DeepEqual(expected, got) {
 		t.Errorf("\nGot: %d\nExpected: %d", got, expected)
+	}
+}
+
+func assertFail(t testing.TB, e error) {
+	if e == nil {
+		t.Error("The function should fail")
 	}
 }

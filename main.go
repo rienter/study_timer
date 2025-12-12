@@ -72,7 +72,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// if timer is not paused
 		if m.timer.Running() {
-			m.timer.Decrease()
+			err := m.timer.Decrease()
+
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err.Error())
+				return m, tea.Quit
+			}
 			percent := float64(m.timer.Elapsed()) / float64(m.timer.Starting())
 			cmd := m.progress.SetPercent(percent)
 			return m, tea.Batch(tickCmd(), cmd)
